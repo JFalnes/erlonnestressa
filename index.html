@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Simple MSAL Authentication Example</title>
+    <title>Er Lønne Stressa?</title>
     <style>
       /* Overall layout and fonts */
       body {
@@ -70,85 +70,19 @@
   <body>
     <div class="container">
       <!-- Large main header -->
-      <h1 class="main-header">ER LØNNE STRESSA?</h1>
+      <h1 class="main-header">TIL MINNE OM LØNNE?</h1>
       <img src="lonnis.jpg" alt="Han e jysla stressa">
 
       <!-- Smaller sub-header -->
       <h2 class="sub-header">JA</h2>
 
       <!-- Status line for login status -->
-      <div id="status">Status: Not logged in</div>
 
-      <!-- The login button -->
-      <button id="loginButton">Login</button>
 
       <!-- Token output hidden until we show it in JS -->
-      <code id="tokenOutput"></code>
     </div>
 
     <!-- MSAL from CDN -->
     <script src="https://alcdn.msauth.net/browser/2.17.0/js/msal-browser.min.js"></script>
-    <script>
-      // 1) MSAL configuration
-      const msalConfig = {
-        auth: {
-          clientId: "***REMOVED***",
-          authority: "https://login.microsoftonline.com/common",
-          redirectUri: "https://erlonnestressa.no/"
-        }
-      };
-
-      // 2) Create a PublicClientApplication instance
-      const msalInstance = new msal.PublicClientApplication(msalConfig);
-
-      // 3) Optional: define login request scopes
-      const loginRequest = {
-        scopes: ["User.Read"]  // or any other scopes you need
-      };
-
-      // 4) Check for existing session / handle redirect flows
-      msalInstance.handleRedirectPromise()
-        .then((response) => {
-          if (response) {
-            showLoggedIn(response);
-          } else {
-            const currentAccounts = msalInstance.getAllAccounts();
-            if (currentAccounts.length > 0) {
-              document.getElementById("status").innerText =
-                "Status: Logged in as " + currentAccounts[0].username;
-            }
-          }
-        })
-        .catch((error) => {
-          console.error("Redirect error:", error);
-        });
-
-      // 5) Handle login button (popup)
-      document.getElementById("loginButton").addEventListener("click", function () {
-        msalInstance.loginPopup(loginRequest)
-          .then((response) => {
-            showLoggedIn(response);
-          })
-          .catch((error) => {
-            console.error("Login error:", error);
-          });
-      });
-
-      // 6) Show tokens, reveal token output area, update status
-      function showLoggedIn(response) {
-        document.getElementById("status").innerText =
-          "Status: Logged in as " + response.account.username;
-
-        // Log tokens for debugging
-        console.log("ID token:", response.idToken);
-        console.log("Access token:", response.accessToken);
-
-        // Reveal and display token info
-        const tokenOutputEl = document.getElementById("tokenOutput");
-        tokenOutputEl.style.display = "block";
-        tokenOutputEl.innerText =
-          "ID Token:\n" + response.idToken + "\n\nAccess Token:\n" + response.accessToken;
-      }
-    </script>
   </body>
 </html>
