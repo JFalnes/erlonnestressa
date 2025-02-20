@@ -65,24 +65,29 @@
         height: auto;
         margin-top: 1rem;
       }
+
+      /* Footer styling for small text */
+      footer {
+        text-align: center;
+        padding: 1rem 0;
+      }
+      footer small {
+        font-size: 0.75rem;
+        color: #bbb;
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <!-- Large main header -->
       <h1 class="main-header">ER LØNNE STRESSA?</h1>
       <img src="lonnis.jpg" alt="Han e jysla stressa">
-
-      <!-- Smaller sub-header -->
       <h2 class="sub-header">JA</h2>
-
-      <!-- Status line for login status -->
-
-
-      <!-- Token output hidden until we show it in JS -->
     </div>
+    <footer>
+      <small>© 2025 Johannes Falnes, noe feil?
+        <a href="mailto:johannes@falnes.no">johannes@falnes.no</a>
 
-    <!-- MSAL from CDN -->
-    <script src="https://alcdn.msauth.net/browser/2.17.0/js/msal-browser.min.js"></script>
+      </small>
+    </footer>
   </body>
 </html>
