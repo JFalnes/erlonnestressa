@@ -3,26 +3,100 @@
   <head>
     <meta charset="utf-8" />
     <title>Simple MSAL Authentication Example</title>
+    <style>
+      /* Overall layout and fonts */
+      body {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 3rem 1rem; /* More spacing for larger text */
+      }
+
+      /* Headers */
+      .main-header {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+      .sub-header {
+        font-size: 2rem;
+        margin-top: 2rem;
+      }
+
+      /* Status text */
+      #status {
+        font-size: 1.25rem;
+        margin-top: 1.5rem;
+      }
+
+      /* Button styling: toned down from bright yellow */
+      #loginButton {
+        margin-top: 2rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        color: #ffffff;
+        background-color: #666666;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      #loginButton:hover {
+        background-color: #888888;
+      }
+
+      /* Token output box: hidden by default, shown only when logged in */
+      #tokenOutput {
+        display: none;       /* Hide until we have a token to show */
+        margin-top: 1.5rem;
+        font-size: 1rem;
+        color: #fff;
+        text-align: left;    /* So tokens align nicely */
+      }
+
+      /* Image styling */
+      img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 1rem;
+      }
+    </style>
   </head>
   <body>
-    <h1>MSAL Authentication Example</h1>
-    <div id="status">Status: Not logged in</div>
-    <br />
-    <button id="loginButton">Login</button>
-    <br /><br />
-    <code id="tokenOutput"></code>
+    <div class="container">
+      <!-- Large main header -->
+      <h1 class="main-header">ER LØNNE STRESSA?</h1>
+      <img src="lonnis.jpg" alt="Han e jysla stressa">
 
-    <!-- Load MSAL from CDN -->
+      <!-- Smaller sub-header -->
+      <h2 class="sub-header">JA</h2>
+
+      <!-- Status line for login status -->
+      <div id="status">Status: Not logged in</div>
+
+      <!-- The login button -->
+      <button id="loginButton">Login</button>
+
+      <!-- Token output hidden until we show it in JS -->
+      <code id="tokenOutput"></code>
+    </div>
+
+    <!-- MSAL from CDN -->
     <script src="https://alcdn.msauth.net/browser/2.17.0/js/msal-browser.min.js"></script>
     <script>
       // 1) MSAL configuration
       const msalConfig = {
-    auth: {
-        clientId: "***REMOVED***", // Replace with your default or fallback
-        authority: "https://login.microsoftonline.com/common",
-        redirectUri: "https://erlonnestressa.no/"
+        auth: {
+          clientId: "***REMOVED***",
+          authority: "https://login.microsoftonline.com/common",
+          redirectUri: "https://erlonnestressa.no/"
         }
-    };
+      };
 
       // 2) Create a PublicClientApplication instance
       const msalInstance = new msal.PublicClientApplication(msalConfig);
@@ -36,10 +110,8 @@
       msalInstance.handleRedirectPromise()
         .then((response) => {
           if (response) {
-            // The user has just logged in via redirect
             showLoggedIn(response);
           } else {
-            // Check if we're returning from a previous session
             const currentAccounts = msalInstance.getAllAccounts();
             if (currentAccounts.length > 0) {
               document.getElementById("status").innerText =
@@ -51,7 +123,7 @@
           console.error("Redirect error:", error);
         });
 
-      // 5) Handle login button
+      // 5) Handle login button (popup)
       document.getElementById("loginButton").addEventListener("click", function () {
         msalInstance.loginPopup(loginRequest)
           .then((response) => {
@@ -62,17 +134,19 @@
           });
       });
 
-      // 6) Helper function to handle UI changes when logged in
+      // 6) Show tokens, reveal token output area, update status
       function showLoggedIn(response) {
-        // Display the username
-        document.getElementById("status").innerText = "Status: Logged in as " + response.account.username;
+        document.getElementById("status").innerText =
+          "Status: Logged in as " + response.account.username;
 
-        // Log token to console for inspection
+        // Log tokens for debugging
         console.log("ID token:", response.idToken);
         console.log("Access token:", response.accessToken);
 
-        // Also display it on the page if desired
-        document.getElementById("tokenOutput").innerText =
+        // Reveal and display token info
+        const tokenOutputEl = document.getElementById("tokenOutput");
+        tokenOutputEl.style.display = "block";
+        tokenOutputEl.innerText =
           "ID Token:\n" + response.idToken + "\n\nAccess Token:\n" + response.accessToken;
       }
     </script>
